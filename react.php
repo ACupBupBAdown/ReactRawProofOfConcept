@@ -8,46 +8,69 @@
 <div id="root">
     <div data-reactroot>
         <h1>Greetings, clive!</h1>
-        <h1>Greetings, derrick!</h1>
+        <h1>Greetings, terrance!</h1>
     </div>
 </div>
 
 <script>
     window.onload = function () {
-        class Greetings extends React.Component {
-            render() {
+
+        /**
+         @param {string} tagName
+         @return {Element}
+         */
+        class AbstractReactComponent extends React.Component{
+
+            dumbListIterate(e, props, keyy, value) {
 
                 var elements = [];
 
-                this.props.list.forEach(function (element) {
-                    elements.push(React.createElement('h1', null, 'Greetings, ' + element.name + '!'));
+                this.props[props].forEach(function (element) {
+                    elements.push(e(element[value], { key: element[keyy] }));
                 });
-
-                return React.createElement('div', null, elements);
+                return elements
             }
         }
 
-        window.setTimeout(partA, 5000);
+        class Greetings extends AbstractReactComponent {
+            render() {
+                return div(this.dumbListIterate(h1, "list", "name", "greeting"));
+            }
+        }
+
+        window.setTimeout(partA, 3000);
         function partA() {
             ReactDOM.render(
                 React.createElement(Greetings, {
-                    list: [{name: 'clive'}, {name: 'derrick'}]
+                    list: [new Greet("Clive"), new Greet("Dave")]
                 }),
                 document.getElementById('root')
             );
 
-            window.setTimeout(partB, 5000);
+            window.setTimeout(partB, 3000);
 
         }
         function partB() {
             ReactDOM.render(
                 React.createElement(Greetings, {
-                    list: [{name: 'clive'}, {name: 'dave'}]
+                    list: [new Greet("Clive"), new Greet("John")]
                 }),
                 document.getElementById('root')
             );
         }
     };
+    function Greet(name) {
+        this.name = name;
+        this.greeting = "Greetings, " + this.name;
+        }
+
+    var h1 = function(string, props = null){
+        return React.createElement('h1', props, string);
+    }
+    var div = function (string){
+        return React.createElement('div', null, string);
+    }
+
 </script>
 </body>
 </html>
